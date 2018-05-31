@@ -1,0 +1,76 @@
+{
+  "resourceType": "Bundle",
+  "id": "Incomplete_Foot_Exam_Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "No_Foot_Exam",
+        "gender": "male",
+        "birthDate": "1968-01-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "4-1",
+        "clinicalStatus": "active",
+        "verificationStatus": "confirmed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Diabetes mellitus type 2 (disorder)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/No_Foot_Exam"
+        },
+        "onsetDateTime": "2015-01-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "4-2",
+        "subject": {
+          "reference": "Patient/No_Foot_Exam"
+        },
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "401191002",
+              "display": "Diabetic foot examination (regime/therapy)"
+            }
+          ]
+        },
+        "performedDateTime": "2018-04-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "4-4",
+        "subject": {
+          "reference": "Patient/No_Foot_Exam"
+        },
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "91161007",
+              "display": "Pedal pulse taking (procedure)"
+            }
+          ]
+        },
+        "performedDateTime": "2018-04-30"
+      }
+    }
+  ]
+}

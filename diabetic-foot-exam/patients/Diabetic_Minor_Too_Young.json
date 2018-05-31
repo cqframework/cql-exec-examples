@@ -1,0 +1,96 @@
+{
+  "resourceType": "Bundle",
+  "id": "Diabetic_Minor_Too_Young",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "Diabetic_Minor_Too_Young",
+        "gender": "male",
+        "birthDate": "2008-09-18"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "6-1",
+        "clinicalStatus": "active",
+        "verificationStatus": "confirmed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "46635009",
+              "display": "Diabetes mellitus type 1 (disorder)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/Diabetic_Minor_Too_Young"
+        },
+        "onsetDateTime": "2017-05-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "6-2",
+        "subject": {
+          "reference": "Patient/Diabetic_Minor_Too_Young"
+        },
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "401191002",
+              "display": "Diabetic foot examination (regime/therapy)"
+            }
+          ]
+        },
+        "performedDateTime": "2017-05-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "6-3",
+        "subject": {
+          "reference": "Patient/Diabetic_Minor_Too_Young"
+        },
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "134388005",
+              "display": "Monofilament foot sensation test (procedure)"
+            }
+          ]
+        },
+        "performedDateTime": "2017-05-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "6-4",
+        "subject": {
+          "reference": "Patient/Diabetic_Minor_Too_Young"
+        },
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "91161007",
+              "display": "Pedal pulse taking (procedure)"
+            }
+          ]
+        },
+        "performedDateTime": "2017-05-30"
+      }
+    }
+  ]
+}

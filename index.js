@@ -1,0 +1,1 @@
+require('./diabetic-foot-exam');
