@@ -4,26 +4,35 @@ const cql = require('cql-execution');
 const cqlfhir = require('cql-exec-fhir');
 const cqlvsac = require('cql-exec-vsac');
 
+let pathToPatients = path.join(__dirname, 'patients');
 let vsacUser, vsacPass;
-if (process.argv.length == 4) {
+if (process.argv.length == 3) {
+  // node ./index.js /path/to/patients
+  pathToPatients = process.argv[2];
+} else if (process.argv.length == 4) {
   // node ./index.js vsacUser vsacPassword
   [vsacUser, vsacPass] = process.argv.slice(2);
+} else if (process.argv.length == 5) {
+  // node ./index.js /path/to/patients vsacUser vsacPassword
+  [pathToPatients, vsacUser, vsacPass] = process.argv.slice(2);
 }
 
 console.log('/-------------------------------------------------------------------------------');
-console.log('| Example:   Diabetic Foot Exam');
+console.log('| Example:   PatientFinder');
+console.log('|            Finds patients > 18 y.o. w/ condition indicating chronic pain');
 console.log('| Usage:');
+console.log('|            node ./index.js /path/to/patients vsacUser vsacPassword');
 console.log('|            node ./index.js vsacUser vsacPassword');
+console.log('|            node ./index.js /path/to/patients');
 console.log('|            node ./index.js');
-
 if (vsacUser) {
-  console.log('| VSAC User:', vsacUser);
+  console.log('| VSAC User: ', vsacUser);
 }
 console.log('\\-------------------------------------------------------------------------------');
 console.log();
 
 // Set up the library
-const elmFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'cql', 'DiabeticFootExam.json'), 'utf8'));
+const elmFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'cql', 'PatientFinderExample.json'), 'utf8'));
 const libraries = {
   FHIRHelpers: JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fhir-helpers', 'v1.0.2', 'FHIRHelpers.json'), 'utf8'))
 };
@@ -34,12 +43,18 @@ const patientSource = cqlfhir.PatientSource.FHIRv102();
 
 // Load the patient source with patients
 const bundles = [];
-for (const fileName of fs.readdirSync(path.join(__dirname, 'patients'))) {
-  const file = path.join(__dirname, 'patients', fileName);
+const idToFileMap = new Map();
+for (const fileName of fs.readdirSync(pathToPatients)) {
+  const file = path.join(pathToPatients, fileName);
   if (!file.endsWith('.json')) {
     continue;
   }
-  bundles.push(JSON.parse(fs.readFileSync(file)));
+  const bundle = JSON.parse(fs.readFileSync(file));
+  const entry = bundle.entry.find(e => e.resource.resourceType === 'Patient');
+  if (entry && entry.resource.id) {
+    idToFileMap.set(entry.resource.id, file);
+  }
+  bundles.push(bundle);
 }
 patientSource.loadBundles(bundles);
 
@@ -57,12 +72,9 @@ codeService.ensureValueSets(valueSets, vsacUser, vsacPass)
     // Value sets are loaded, so execute!
     const executor = new cql.Executor(library, codeService);
     const results = executor.exec(patientSource);
-    for (const id in results.patientResults) {
-      const result = results.patientResults[id];
-      console.log(`${id}:`);
-      console.log(`\tMeetsInclusionCriteria: ${result.MeetsInclusionCriteria}`);
-      console.log(`\tNeedsFootExam: ${result.NeedsFootExam}`);
-    }
+    const matches = results.populationResults.MatchedIDs;
+    console.log(`Found ${matches.length} matches:`);
+    matches.forEach(id => console.log(idToFileMap.get(id)));
     console.log();
   })
   .catch( (err) => {

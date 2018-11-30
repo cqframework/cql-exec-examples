@@ -2,7 +2,7 @@
 
 This repository is intended to include examples showing how to use the
 [cql-execution](https://github.com/cqframework/cql-execution)
-library.  Currently, there is a single example, demonstrating how to use `cql-execution` with the
+library.  Currently, there are two examples, demonstrating how to use `cql-execution` with the
 [cql-exec-fhir](https://github.com/cqframework/cql-exec-fhir) data source and
 [cql-exec-vsac](https://github.com/cqframework/cql-exec-vsac) code service.
 
@@ -22,7 +22,7 @@ To use this project, you should perform the following steps:
 
 # Running the Example
 
-The first time you run the example, you need to download the referenced value sets from the Value Set Authority Center
+The first time you run the examples, you need to download the referenced value sets from the Value Set Authority Center
 (VSAC).  This requires your username and password:
 
 ```bash
