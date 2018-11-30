@@ -23,9 +23,9 @@ console.log('\\-----------------------------------------------------------------
 console.log();
 
 // Set up the library
-const elmFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'cql', 'DiabeticFootExam.json'), 'utf8'));
+const elmFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'dstu2', 'cql', 'DiabeticFootExam.json'), 'utf8'));
 const libraries = {
-  FHIRHelpers: JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fhir-helpers', 'v1.0.2', 'FHIRHelpers.json'), 'utf8'))
+  FHIRHelpers: JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fhir-helpers', 'dstu2', 'FHIRHelpers.json'), 'utf8'))
 };
 const library = new cql.Library(elmFile, new cql.Repository(libraries));
 
@@ -34,8 +34,9 @@ const patientSource = cqlfhir.PatientSource.FHIRv102();
 
 // Load the patient source with patients
 const bundles = [];
-for (const fileName of fs.readdirSync(path.join(__dirname, 'patients'))) {
-  const file = path.join(__dirname, 'patients', fileName);
+const patientsPath = path.join(__dirname, 'dstu2', 'patients');
+for (const fileName of fs.readdirSync(patientsPath)) {
+  const file = path.join(patientsPath, fileName);
   if (!file.endsWith('.json')) {
     continue;
   }

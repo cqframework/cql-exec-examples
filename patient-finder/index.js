@@ -4,7 +4,7 @@ const cql = require('cql-execution');
 const cqlfhir = require('cql-exec-fhir');
 const cqlvsac = require('cql-exec-vsac');
 
-let pathToPatients = path.join(__dirname, 'patients');
+let pathToPatients = path.join(__dirname, 'dstu2', 'patients');
 let vsacUser, vsacPass;
 if (process.argv.length == 3) {
   // node ./index.js /path/to/patients
@@ -32,9 +32,9 @@ console.log('\\-----------------------------------------------------------------
 console.log();
 
 // Set up the library
-const elmFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'cql', 'PatientFinderExample.json'), 'utf8'));
+const elmFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'dstu2', 'cql', 'PatientFinderExample.json'), 'utf8'));
 const libraries = {
-  FHIRHelpers: JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fhir-helpers', 'v1.0.2', 'FHIRHelpers.json'), 'utf8'))
+  FHIRHelpers: JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fhir-helpers', 'dstu2', 'FHIRHelpers.json'), 'utf8'))
 };
 const library = new cql.Library(elmFile, new cql.Repository(libraries));
 
