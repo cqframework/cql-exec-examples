@@ -1,22 +1,38 @@
 {
   "resourceType": "Bundle",
-  "id": "Recent_Foot_Exam_Bundle",
+  "id": "Old_Foot_Exam_Bundle",
   "type": "collection",
   "entry": [
     {
       "resource": {
         "resourceType": "Patient",
-        "id": "Recent_Foot_Exam",
-        "gender": "female",
-        "birthDate": "1979-01-30"
+        "id": "Old_Foot_Exam",
+        "gender": "male",
+        "birthDate": "1982-01-30"
       }
     },
     {
       "resource": {
         "resourceType": "Condition",
-        "id": "2-1",
-        "clinicalStatus": "active",
-        "verificationStatus": "confirmed",
+        "id": "3-1",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active",
+              "display": "Active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed",
+              "display": "Confirmed"
+            }
+          ]
+        },
         "code": {
           "coding": [
             {
@@ -27,7 +43,7 @@
           ]
         },
         "subject": {
-          "reference": "Patient/Recent_Foot_Exam"
+          "reference": "Patient/Old_Foot_Exam"
         },
         "onsetDateTime": "2015-01-30"
       }
@@ -35,9 +51,9 @@
     {
       "resource": {
         "resourceType": "Procedure",
-        "id": "2-2",
+        "id": "3-2",
         "subject": {
-          "reference": "Patient/Recent_Foot_Exam"
+          "reference": "Patient/Old_Foot_Exam"
         },
         "status": "completed",
         "code": {
@@ -49,15 +65,15 @@
             }
           ]
         },
-        "performedDateTime": "2019-03-30"
+        "performedDateTime": "2017-03-30"
       }
     },
     {
       "resource": {
         "resourceType": "Procedure",
-        "id": "2-3",
+        "id": "3-3",
         "subject": {
-          "reference": "Patient/Recent_Foot_Exam"
+          "reference": "Patient/Old_Foot_Exam"
         },
         "status": "completed",
         "code": {
@@ -69,15 +85,15 @@
             }
           ]
         },
-        "performedDateTime": "2019-03-30"
+        "performedDateTime": "2017-03-30"
       }
     },
     {
       "resource": {
         "resourceType": "Procedure",
-        "id": "2-4",
+        "id": "3-4",
         "subject": {
-          "reference": "Patient/Recent_Foot_Exam"
+          "reference": "Patient/Old_Foot_Exam"
         },
         "status": "completed",
         "code": {
@@ -89,7 +105,7 @@
             }
           ]
         },
-        "performedDateTime": "2019-03-30"
+        "performedDateTime": "2017-03-30"
       }
     }
   ]

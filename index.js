@@ -25,10 +25,16 @@ process.stdin.on('keypress', (c) => {
     dfeRunner('stu3', exit);
     break;
   case '3':
-    pfRunner('dstu2', exit);
+    dfeRunner('r4', exit);
     break;
   case '4':
+    pfRunner('dstu2', exit);
+    break;
+  case '5':
     pfRunner('stu3', exit);
+    break;
+  case '6':
+    pfRunner('r4', exit);
     break;
   default:
     console.log('Invalid option: ', c);
@@ -43,8 +49,10 @@ console.log('\\-----------------------------------------------------------------
 console.log();
 console.log('[1] Diabetic Foot Example (FHIR DSTU2)');
 console.log('[2] Diabetic Foot Example (FHIR STU3)');
-console.log('[3] Patient Finder (FHIR DSTU2)');
-console.log('[4] Patient Finder (FHIR STU3)');
+console.log('[3] Diabetic Foot Example (FHIR R4)');
+console.log('[4] Patient Finder (FHIR DSTU2)');
+console.log('[5] Patient Finder (FHIR STU3)');
+console.log('[6] Patient Finder (FHIR R4)');
 console.log('[Q] Quit');
 console.log();
 console.log('Choose an example to run: ');

@@ -14,8 +14,8 @@ module.exports = function (version, callback = (err) => {}) {
   console.log('/-------------------------------------------------------------------------------');
   console.log(`| Example:   Diabetic Foot Exam (${version})`);
   console.log('| Usage:');
-  console.log('|            node ./index.js vsacUser vsacPassword');
-  console.log('|            node ./index.js');
+  console.log(`|            node ./diabetic-foot-exam/${version}.js vsacUser vsacPassword`);
+  console.log(`|            node ./diabetic-foot-exam/${version}.js`);
 
   if (vsacUser) {
     console.log('| VSAC User:', vsacUser);
@@ -31,7 +31,13 @@ module.exports = function (version, callback = (err) => {}) {
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
 
   // Create the patient source
-  const patientSource = version === 'dstu2' ? cqlfhir.PatientSource.FHIRv102() : cqlfhir.PatientSource.FHIRv300();
+  let patientSource;
+  switch (version) {
+  case 'dstu2': patientSource = cqlfhir.PatientSource.FHIRv102(); break;
+  case 'stu3': patientSource = cqlfhir.PatientSource.FHIRv300(); break;
+  case 'r4': patientSource = cqlfhir.PatientSource.FHIRv400(); break;
+  default: patientSource = cqlfhir.PatientSource.FHIRv400(); break;
+  }
 
   // Load the patient source with patients
   const bundles = [];
