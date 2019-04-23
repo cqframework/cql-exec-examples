@@ -23,10 +23,10 @@ module.exports = function (version, callback = (err) => {}) {
   console.log(`| Example:   PatientFinder (${version})`);
   console.log('|            Finds patients > 18 y.o. w/ condition indicating chronic pain');
   console.log('| Usage:');
-  console.log('|            node ./index.js /path/to/patients vsacUser vsacPassword');
-  console.log('|            node ./index.js vsacUser vsacPassword');
-  console.log('|            node ./index.js /path/to/patients');
-  console.log('|            node ./index.js');
+  console.log(`|            node ./patient-finder/${version}.js /path/to/patients vsacUser vsacPassword`);
+  console.log(`|            node ./patient-finder/${version}.js vsacUser vsacPassword`);
+  console.log(`|            node ./patient-finder/${version}.js /path/to/patients`);
+  console.log(`|            node ./patient-finder/${version}.js`);
   if (vsacUser) {
     console.log('| VSAC User: ', vsacUser);
   }
@@ -40,26 +40,6 @@ module.exports = function (version, callback = (err) => {}) {
   };
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
 
-  // Create the patient source
-  const patientSource = version === 'dstu2' ? cqlfhir.PatientSource.FHIRv102() : cqlfhir.PatientSource.FHIRv300();
-
-  // Load the patient source with patients
-  const bundles = [];
-  const idToFileMap = new Map();
-  for (const fileName of fs.readdirSync(pathToPatients)) {
-    const file = path.join(pathToPatients, fileName);
-    if (!file.endsWith('.json')) {
-      continue;
-    }
-    const bundle = JSON.parse(fs.readFileSync(file));
-    const entry = bundle.entry.find(e => e.resource.resourceType === 'Patient');
-    if (entry && entry.resource.id) {
-      idToFileMap.set(entry.resource.id, file);
-    }
-    bundles.push(bundle);
-  }
-  patientSource.loadBundles(bundles);
-
   // Extract the value sets from the ELM
   let valueSets = [];
   if (elmFile.library && elmFile.library.valueSets && elmFile.library.valueSets.def) {
@@ -72,12 +52,7 @@ module.exports = function (version, callback = (err) => {}) {
   codeService.ensureValueSets(valueSets, vsacUser, vsacPass)
     .then(() => {
       // Value sets are loaded, so execute!
-      const executor = new cql.Executor(library, codeService);
-      const results = executor.exec(patientSource);
-      const matches = results.populationResults.MatchedIDs;
-      console.log(`Found ${matches.length} matches:`);
-      matches.forEach(id => console.log(idToFileMap.get(id)));
-      console.log();
+      execute(library, codeService, version, pathToPatients);
       callback();
     })
     .catch( (err) => {
@@ -86,3 +61,50 @@ module.exports = function (version, callback = (err) => {}) {
       callback(err);
     });
 };
+
+function execute(library, codeService, version, pathToPatients) {
+  // Create the patient source
+  let patientSource;
+  switch (version) {
+  case 'dstu2': patientSource = cqlfhir.PatientSource.FHIRv102(); break;
+  case 'stu3': patientSource = cqlfhir.PatientSource.FHIRv300(); break;
+  case 'r4': patientSource = cqlfhir.PatientSource.FHIRv400(); break;
+  default: patientSource = cqlfhir.PatientSource.FHIRv400(); break;
+  }
+
+  const executor = new cql.Executor(library, codeService);
+
+  // Execute 100 at a time
+  const bundles = [];
+  const idToFileMap = new Map();
+  const matches = [];
+  const fileNames = fs.readdirSync(pathToPatients);
+  for (let i=0; i< fileNames.length; i++) {
+    if (i === 0 || i % 100 === 0) {
+      const end = (i + 100) <= fileNames.length ? i + 100 : fileNames.length;
+      console.log(`Processing patients ${i+1} to ${end}...`);
+    }
+
+    const file = path.join(pathToPatients, fileNames[i]);
+    if (!file.endsWith('.json')) {
+      continue;
+    }
+    const bundle = JSON.parse(fs.readFileSync(file));
+    const entry = bundle.entry.find(e => e.resource.resourceType === 'Patient');
+    if (entry && entry.resource.id) {
+      idToFileMap.set(entry.resource.id, file);
+    }
+    bundles.push(bundle);
+
+    if (i === (fileNames.length-1) || (i+1) % 100 === 0) {
+      patientSource.loadBundles(bundles);
+      const results = executor.exec(patientSource);
+      matches.push(...results.populationResults.MatchedIDs);
+      bundles.length = 0;
+      patientSource.reset();
+    }
+  }
+  console.log(`Found ${matches.length} matches:`);
+  matches.forEach(id => console.log(idToFileMap.get(id)));
+  console.log();
+}

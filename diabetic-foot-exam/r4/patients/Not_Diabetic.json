@@ -1,0 +1,15 @@
+{
+  "resourceType": "Bundle",
+  "id": "Not_Diabetic_Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "Not_Diabetic",
+        "gender": "female",
+        "birthDate": "1980-01-30"
+      }
+    }
+  ]
+}
