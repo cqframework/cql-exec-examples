@@ -39,6 +39,19 @@ able to run the same example without credentials:
 $ node index.js
 ```
 
+# Updating the Example CQL and ELM
+
+The CQL execution framework uses the ELM JSON representations of the CQL logic.  After updating the example CQL in
+this project, you will need to translate it to ELM JSON for execution to pick up the changes. The CQL-to-ELM
+translator requires that [Java](https://adoptopenjdk.net/) be installed. This has been tested using OpenJDK 8, but
+later versions may also work (your mileage my vary).
+
+Once Java has been installed, run the CQL-to-ELM translation via the following command:
+
+```bash
+$ ./gradlw cql2elm
+```
+
 # Linting the Code
 
 To encourage quality and consistency within the code base, all code should pass eslint without any warnings.  Many text
