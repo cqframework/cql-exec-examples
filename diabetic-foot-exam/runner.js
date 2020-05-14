@@ -47,7 +47,19 @@ module.exports = function (version, callback = (err) => {}) {
     if (!file.endsWith('.json')) {
       continue;
     }
-    bundles.push(JSON.parse(fs.readFileSync(file)));
+    const json = JSON.parse(fs.readFileSync(file));
+    // Need to modify the date for the recent foot exam example
+    if (fileName === 'Recent_Foot_Exam.json') {
+      const procedureDate = new Date();
+      procedureDate.setMonth(procedureDate.getMonth() - 3);
+      const procedureDateStr = procedureDate.toISOString().slice(0, 10);
+      json.entry.forEach(entry => {
+        if (entry.resource.resourceType === 'Procedure') {
+          entry.resource.performedDateTime = procedureDateStr;
+        }
+      });
+    }
+    bundles.push(json);
   }
   patientSource.loadBundles(bundles);
 
