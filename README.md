@@ -49,7 +49,7 @@ later versions may also work (your mileage my vary).
 Once Java has been installed, run the CQL-to-ELM translation via the following command:
 
 ```bash
-$ ./gradlw cql2elm
+$ ./gradlew cql2elm
 ```
 
 # Linting the Code
