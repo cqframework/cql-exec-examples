@@ -9,7 +9,7 @@ include FHIRHelpers version '4.0.0' called FHIRHelpers
 // Value set and codes loosely borrowed from CMS 123v7
 codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "CONDITION-VER-STATUS": 'http://terminology.hl7.org/CodeSystem/condition-ver-status'
-valueset "Diabetes": '2.16.840.1.113883.3.464.1003.103.12.1001'
+valueset "Diabetes": 'https://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.103.12.1001'
 code "Confirmed code": 'confirmed' from "CONDITION-VER-STATUS" display 'Confirmed'
 code "Diabetic foot examination (regime/therapy) code": '401191002' from "SNOMEDCT" display 'Diabetic foot examination (regime/therapy)'
 code "Monofilament foot sensation test (procedure) code": '134388005' from "SNOMEDCT" display 'Monofilament foot sensation test (procedure)'

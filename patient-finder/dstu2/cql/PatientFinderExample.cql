@@ -8,7 +8,7 @@ using FHIR version '1.0.2'
 include FHIRHelpers version '1.0.2' called FHIRHelpers
 
 // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113762.1.4.1032.37/expansion)
-valueset "Conditions associated with chronic pain": '2.16.840.1.113762.1.4.1032.37'
+valueset "Conditions associated with chronic pain": 'https://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1032.37'
 
 context Patient
 
