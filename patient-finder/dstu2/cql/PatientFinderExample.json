@@ -1,5 +1,9 @@
 {
    "library" : {
+      "annotation" : [ {
+         "translatorOptions" : "",
+         "type" : "CqlToElmInfo"
+      } ],
       "identifier" : {
          "id" : "PatientFinderExample",
          "version" : "1.0.0"
@@ -30,6 +34,13 @@
             "name" : "Conditions associated with chronic pain",
             "id" : "https://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1032.37",
             "accessLevel" : "Public"
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient"
+         }, {
+            "name" : "Unfiltered"
          } ]
       },
       "statements" : {
@@ -79,6 +90,7 @@
                      "expression" : {
                         "dataType" : "{http://hl7.org/fhir}Condition",
                         "codeProperty" : "code",
+                        "codeComparator" : "in",
                         "type" : "Retrieve",
                         "codes" : {
                            "name" : "Conditions associated with chronic pain",
@@ -174,7 +186,7 @@
             }
          }, {
             "name" : "MatchedIDs",
-            "context" : "Population",
+            "context" : "Unfiltered",
             "accessLevel" : "Public",
             "expression" : {
                "type" : "Query",

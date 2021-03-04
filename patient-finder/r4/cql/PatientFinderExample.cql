@@ -4,8 +4,8 @@
 // such as filtering a large set of synthetic patients to patients of interest.
 
 library PatientFinderExample version '1.0.0'
-using FHIR version '4.0.0'
-include FHIRHelpers version '4.0.0' called FHIRHelpers
+using FHIR version '4.0.1'
+include FHIRHelpers version '4.0.1' called FHIRHelpers
 
 codesystem "CONDITION-VER-STATUS": 'http://terminology.hl7.org/CodeSystem/condition-ver-status'
 codesystem "CONDITION-CLINICAL": 'http://terminology.hl7.org/CodeSystem/condition-clinical'
@@ -35,6 +35,6 @@ define IsMatch:
 
 define MatchData: Tuple{ ID: Patient.id.value, IsMatch: IsMatch }
 
-context Population
+context Unfiltered
 
 define MatchedIDs: MatchData D where D.IsMatch return D.ID

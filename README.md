@@ -23,13 +23,15 @@ To use this project, you should perform the following steps:
 # Running the Examples
 
 The first time you run each example, you need to download the referenced value sets from the Value Set Authority Center
-(VSAC).  This requires your username and password:
+(VSAC).  This requires your UMLS API Key.  Your API Key may be found in your [UMLS Profile](https://uts.nlm.nih.gov//uts.html#profile).
+
+To run the examples while passing your UMLS API Key via the command line:
 
 ```bash
-$ node index.js myUmlsUserName myUmlsPassword
+$ node index.js myUmlsApiKey
 ```
 
-NOTE: You can also set the credentials by setting `UMLS_USER_NAME` and `UMLS_PASSWORD` environment variables, instead
+NOTE: You can also set the credentials by setting an `UMLS_API_KEY` environment variable instead
 of passing the credentials on the command line.
 
 After running once with your credentials, the downloaded value set definitions are cached.  After that, you should be
@@ -43,7 +45,7 @@ $ node index.js
 
 The CQL execution framework uses the ELM JSON representations of the CQL logic.  After updating the example CQL in
 this project, you will need to translate it to ELM JSON for execution to pick up the changes. The CQL-to-ELM
-translator requires that [Java](https://adoptopenjdk.net/) be installed. This has been tested using OpenJDK 8, but
+translator requires that [Java](https://adoptopenjdk.net/) be installed. This has been tested using OpenJDK 11, but
 later versions may also work (your mileage my vary).
 
 Once Java has been installed, run the CQL-to-ELM translation via the following command:
@@ -51,6 +53,9 @@ Once Java has been installed, run the CQL-to-ELM translation via the following c
 ```bash
 $ ./gradlew cql2elm
 ```
+
+_NOTE: You may see CQL-to-ELM errors trying to compile CQL from dependency libraries in node_modules. You can
+safely ignore these errors._
 
 # Linting the Code
 

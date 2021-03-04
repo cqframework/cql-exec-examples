@@ -5,10 +5,10 @@ const cqlfhir = require('cql-exec-fhir');
 const cqlvsac = require('cql-exec-vsac');
 
 module.exports = function (version, callback = (err) => {}) {
-  let vsacUser, vsacPass;
-  if (process.argv.length == 4) {
-    // node ./index.js vsacUser vsacPassword
-    [vsacUser, vsacPass] = process.argv.slice(2);
+  let umlsApiKey;
+  if (process.argv.length == 3) {
+    // node ./index.js umlsApiKey
+    umlsApiKey = process.argv[2];
   }
 
   console.log('/-------------------------------------------------------------------------------');
@@ -16,10 +16,6 @@ module.exports = function (version, callback = (err) => {}) {
   console.log('| Usage:');
   console.log(`|            node ./diabetic-foot-exam/${version}.js vsacUser vsacPassword`);
   console.log(`|            node ./diabetic-foot-exam/${version}.js`);
-
-  if (vsacUser) {
-    console.log('| VSAC User:', vsacUser);
-  }
   console.log('\\-------------------------------------------------------------------------------');
   console.log();
 
@@ -35,8 +31,8 @@ module.exports = function (version, callback = (err) => {}) {
   switch (version) {
   case 'dstu2': patientSource = cqlfhir.PatientSource.FHIRv102(); break;
   case 'stu3': patientSource = cqlfhir.PatientSource.FHIRv300(); break;
-  case 'r4': patientSource = cqlfhir.PatientSource.FHIRv400(); break;
-  default: patientSource = cqlfhir.PatientSource.FHIRv400(); break;
+  case 'r4': patientSource = cqlfhir.PatientSource.FHIRv401(); break;
+  default: patientSource = cqlfhir.PatientSource.FHIRv401(); break;
   }
 
   // Load the patient source with patients
@@ -72,7 +68,7 @@ module.exports = function (version, callback = (err) => {}) {
   // Set up the code service, loading from the cache if it exists
   const codeService = new cqlvsac.CodeService(path.join(__dirname, 'vsac_cache'), true);
   // Ensure value sets, downloading any missing value sets
-  codeService.ensureValueSets(valueSets, vsacUser, vsacPass)
+  codeService.ensureValueSetsWithAPIKey(valueSets, umlsApiKey)
     .then(() => {
       // Value sets are loaded, so execute!
       const executor = new cql.Executor(library, codeService);

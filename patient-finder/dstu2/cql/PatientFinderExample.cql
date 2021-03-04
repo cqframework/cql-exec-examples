@@ -27,6 +27,6 @@ define IsMatch:
 
 define MatchData: Tuple{ ID: Patient.id.value, IsMatch: IsMatch }
 
-context Population
+context Unfiltered
 
 define MatchedIDs: MatchData D where D.IsMatch return D.ID

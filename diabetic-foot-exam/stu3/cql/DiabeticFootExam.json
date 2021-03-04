@@ -1,5 +1,9 @@
 {
    "library" : {
+      "annotation" : [ {
+         "translatorOptions" : "",
+         "type" : "CqlToElmInfo"
+      } ],
       "identifier" : {
          "id" : "DiabeticFootExam",
          "version" : "1.0.0"
@@ -90,6 +94,11 @@
             } ]
          } ]
       },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient"
+         } ]
+      },
       "statements" : {
          "def" : [ {
             "name" : "Patient",
@@ -158,6 +167,7 @@
                      "expression" : {
                         "dataType" : "{http://hl7.org/fhir}Condition",
                         "codeProperty" : "code",
+                        "codeComparator" : "in",
                         "type" : "Retrieve",
                         "codes" : {
                            "name" : "Diabetes",
@@ -211,10 +221,12 @@
                      "expression" : {
                         "dataType" : "{http://hl7.org/fhir}Procedure",
                         "codeProperty" : "code",
+                        "codeComparator" : "~",
                         "type" : "Retrieve",
                         "codes" : {
-                           "type" : "ToList",
-                           "operand" : {
+                           "path" : "codes",
+                           "type" : "Property",
+                           "source" : {
                               "name" : "Diabetic foot examination (regime/therapy)",
                               "type" : "ConceptRef"
                            }
@@ -257,46 +269,57 @@
                            }
                         } ]
                      }, {
-                        "type" : "In",
+                        "type" : "And",
                         "operand" : [ {
-                           "path" : "value",
-                           "type" : "Property",
-                           "source" : {
-                              "strict" : false,
-                              "type" : "As",
-                              "operand" : {
-                                 "path" : "performed",
-                                 "scope" : "P",
-                                 "type" : "Property"
-                              },
-                              "asTypeSpecifier" : {
-                                 "name" : "{http://hl7.org/fhir}dateTime",
-                                 "type" : "NamedTypeSpecifier"
+                           "type" : "In",
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "source" : {
+                                 "strict" : false,
+                                 "type" : "As",
+                                 "operand" : {
+                                    "path" : "performed",
+                                    "scope" : "P",
+                                    "type" : "Property"
+                                 },
+                                 "asTypeSpecifier" : {
+                                    "name" : "{http://hl7.org/fhir}dateTime",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
                               }
-                           }
+                           }, {
+                              "lowClosed" : true,
+                              "highClosed" : true,
+                              "type" : "Interval",
+                              "low" : {
+                                 "type" : "Subtract",
+                                 "operand" : [ {
+                                    "type" : "Now"
+                                 }, {
+                                    "value" : 1,
+                                    "unit" : "year",
+                                    "type" : "Quantity"
+                                 } ]
+                              },
+                              "high" : {
+                                 "type" : "Add",
+                                 "operand" : [ {
+                                    "type" : "Now"
+                                 }, {
+                                    "value" : 1,
+                                    "unit" : "year",
+                                    "type" : "Quantity"
+                                 } ]
+                              }
+                           } ]
                         }, {
-                           "lowClosed" : true,
-                           "highClosed" : true,
-                           "type" : "Interval",
-                           "low" : {
-                              "type" : "Subtract",
-                              "operand" : [ {
+                           "type" : "Not",
+                           "operand" : {
+                              "type" : "IsNull",
+                              "operand" : {
                                  "type" : "Now"
-                              }, {
-                                 "value" : 1,
-                                 "unit" : "year",
-                                 "type" : "Quantity"
-                              } ]
-                           },
-                           "high" : {
-                              "type" : "Add",
-                              "operand" : [ {
-                                 "type" : "Now"
-                              }, {
-                                 "value" : 1,
-                                 "unit" : "year",
-                                 "type" : "Quantity"
-                              } ]
+                              }
                            }
                         } ]
                      } ]
@@ -316,10 +339,12 @@
                      "expression" : {
                         "dataType" : "{http://hl7.org/fhir}Procedure",
                         "codeProperty" : "code",
+                        "codeComparator" : "~",
                         "type" : "Retrieve",
                         "codes" : {
-                           "type" : "ToList",
-                           "operand" : {
+                           "path" : "codes",
+                           "type" : "Property",
+                           "source" : {
                               "name" : "Monofilament foot sensation test (procedure)",
                               "type" : "ConceptRef"
                            }
@@ -362,38 +387,49 @@
                            }
                         } ]
                      }, {
-                        "type" : "In",
+                        "type" : "And",
                         "operand" : [ {
-                           "path" : "value",
-                           "type" : "Property",
-                           "source" : {
-                              "path" : "performed",
-                              "scope" : "P",
-                              "type" : "Property"
-                           }
+                           "type" : "In",
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "source" : {
+                                 "path" : "performed",
+                                 "scope" : "P",
+                                 "type" : "Property"
+                              }
+                           }, {
+                              "lowClosed" : true,
+                              "highClosed" : true,
+                              "type" : "Interval",
+                              "low" : {
+                                 "type" : "Subtract",
+                                 "operand" : [ {
+                                    "type" : "Now"
+                                 }, {
+                                    "value" : 1,
+                                    "unit" : "year",
+                                    "type" : "Quantity"
+                                 } ]
+                              },
+                              "high" : {
+                                 "type" : "Add",
+                                 "operand" : [ {
+                                    "type" : "Now"
+                                 }, {
+                                    "value" : 1,
+                                    "unit" : "year",
+                                    "type" : "Quantity"
+                                 } ]
+                              }
+                           } ]
                         }, {
-                           "lowClosed" : true,
-                           "highClosed" : true,
-                           "type" : "Interval",
-                           "low" : {
-                              "type" : "Subtract",
-                              "operand" : [ {
+                           "type" : "Not",
+                           "operand" : {
+                              "type" : "IsNull",
+                              "operand" : {
                                  "type" : "Now"
-                              }, {
-                                 "value" : 1,
-                                 "unit" : "year",
-                                 "type" : "Quantity"
-                              } ]
-                           },
-                           "high" : {
-                              "type" : "Add",
-                              "operand" : [ {
-                                 "type" : "Now"
-                              }, {
-                                 "value" : 1,
-                                 "unit" : "year",
-                                 "type" : "Quantity"
-                              } ]
+                              }
                            }
                         } ]
                      } ]
@@ -413,10 +449,12 @@
                      "expression" : {
                         "dataType" : "{http://hl7.org/fhir}Procedure",
                         "codeProperty" : "code",
+                        "codeComparator" : "~",
                         "type" : "Retrieve",
                         "codes" : {
-                           "type" : "ToList",
-                           "operand" : {
+                           "path" : "codes",
+                           "type" : "Property",
+                           "source" : {
                               "name" : "Pedal pulse taking (procedure)",
                               "type" : "ConceptRef"
                            }
@@ -459,38 +497,49 @@
                            }
                         } ]
                      }, {
-                        "type" : "In",
+                        "type" : "And",
                         "operand" : [ {
-                           "path" : "value",
-                           "type" : "Property",
-                           "source" : {
-                              "path" : "performed",
-                              "scope" : "P",
-                              "type" : "Property"
-                           }
+                           "type" : "In",
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "source" : {
+                                 "path" : "performed",
+                                 "scope" : "P",
+                                 "type" : "Property"
+                              }
+                           }, {
+                              "lowClosed" : true,
+                              "highClosed" : true,
+                              "type" : "Interval",
+                              "low" : {
+                                 "type" : "Subtract",
+                                 "operand" : [ {
+                                    "type" : "Now"
+                                 }, {
+                                    "value" : 1,
+                                    "unit" : "year",
+                                    "type" : "Quantity"
+                                 } ]
+                              },
+                              "high" : {
+                                 "type" : "Add",
+                                 "operand" : [ {
+                                    "type" : "Now"
+                                 }, {
+                                    "value" : 1,
+                                    "unit" : "year",
+                                    "type" : "Quantity"
+                                 } ]
+                              }
+                           } ]
                         }, {
-                           "lowClosed" : true,
-                           "highClosed" : true,
-                           "type" : "Interval",
-                           "low" : {
-                              "type" : "Subtract",
-                              "operand" : [ {
+                           "type" : "Not",
+                           "operand" : {
+                              "type" : "IsNull",
+                              "operand" : {
                                  "type" : "Now"
-                              }, {
-                                 "value" : 1,
-                                 "unit" : "year",
-                                 "type" : "Quantity"
-                              } ]
-                           },
-                           "high" : {
-                              "type" : "Add",
-                              "operand" : [ {
-                                 "type" : "Now"
-                              }, {
-                                 "value" : 1,
-                                 "unit" : "year",
-                                 "type" : "Quantity"
-                              } ]
+                              }
                            }
                         } ]
                      } ]

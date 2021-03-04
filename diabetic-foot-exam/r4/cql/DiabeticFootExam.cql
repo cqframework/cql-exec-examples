@@ -3,8 +3,8 @@
 // is NOT clinically validated and should NOT be used in a clinical setting.
 
 library DiabeticFootExam version '1.0.0'
-using FHIR version '4.0.0'
-include FHIRHelpers version '4.0.0' called FHIRHelpers
+using FHIR version '4.0.1'
+include FHIRHelpers version '4.0.1' called FHIRHelpers
 
 // Value set and codes loosely borrowed from CMS 123v7
 codesystem "SNOMEDCT": 'http://snomed.info/sct'

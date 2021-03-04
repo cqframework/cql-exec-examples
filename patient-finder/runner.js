@@ -6,17 +6,12 @@ const cqlvsac = require('cql-exec-vsac');
 
 module.exports = function (version, callback = (err) => {}) {
 
-  let pathToPatients = path.join(__dirname, version, 'patients');
-  let vsacUser, vsacPass;
+  const pathToPatients = path.join(__dirname, version, 'patients');
+
+  let umlsApiKey;
   if (process.argv.length == 3) {
-    // node ./index.js /path/to/patients
-    pathToPatients = process.argv[2];
-  } else if (process.argv.length == 4) {
-    // node ./index.js vsacUser vsacPassword
-    [vsacUser, vsacPass] = process.argv.slice(2);
-  } else if (process.argv.length == 5) {
-    // node ./index.js /path/to/patients vsacUser vsacPassword
-    [pathToPatients, vsacUser, vsacPass] = process.argv.slice(2);
+    // node ./index.js umlsApiKey
+    umlsApiKey = process.argv[2];
   }
 
   console.log('/-------------------------------------------------------------------------------');
@@ -27,9 +22,6 @@ module.exports = function (version, callback = (err) => {}) {
   console.log(`|            node ./patient-finder/${version}.js vsacUser vsacPassword`);
   console.log(`|            node ./patient-finder/${version}.js /path/to/patients`);
   console.log(`|            node ./patient-finder/${version}.js`);
-  if (vsacUser) {
-    console.log('| VSAC User: ', vsacUser);
-  }
   console.log('\\-------------------------------------------------------------------------------');
   console.log();
 
@@ -49,7 +41,7 @@ module.exports = function (version, callback = (err) => {}) {
   // Set up the code service, loading from the cache if it exists
   const codeService = new cqlvsac.CodeService(path.join(__dirname, 'vsac_cache'), true);
   // Ensure value sets, downloading any missing value sets
-  codeService.ensureValueSets(valueSets, vsacUser, vsacPass)
+  codeService.ensureValueSetsWithAPIKey(valueSets, umlsApiKey)
     .then(() => {
       // Value sets are loaded, so execute!
       execute(library, codeService, version, pathToPatients);
@@ -68,8 +60,8 @@ function execute(library, codeService, version, pathToPatients) {
   switch (version) {
   case 'dstu2': patientSource = cqlfhir.PatientSource.FHIRv102(); break;
   case 'stu3': patientSource = cqlfhir.PatientSource.FHIRv300(); break;
-  case 'r4': patientSource = cqlfhir.PatientSource.FHIRv400(); break;
-  default: patientSource = cqlfhir.PatientSource.FHIRv400(); break;
+  case 'r4': patientSource = cqlfhir.PatientSource.FHIRv401(); break;
+  default: patientSource = cqlfhir.PatientSource.FHIRv401(); break;
   }
 
   const executor = new cql.Executor(library, codeService);
@@ -99,7 +91,7 @@ function execute(library, codeService, version, pathToPatients) {
     if (i === (fileNames.length-1) || (i+1) % 100 === 0) {
       patientSource.loadBundles(bundles);
       const results = executor.exec(patientSource);
-      matches.push(...results.populationResults.MatchedIDs);
+      matches.push(...results.unfilteredResults.MatchedIDs);
       bundles.length = 0;
       patientSource.reset();
     }
